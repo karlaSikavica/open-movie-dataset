@@ -1,0 +1,37 @@
+FilmID,Naziv filma,Godina,Zanr,Zemlja nastanka filma,Trajanje filma,Ime redatelja,Prezime redatelja,IMDB ocjena filma,Budzet mil USD,GlumacID,Ime glumca,Prezime glumca,Spol,Datum rodenja,Drzava podrijetla,Broj nagrada,Aktivan od,Uloga
+1,Saltburn,2023,"Drama, Thriller",UK,131,Emerald,Fennell,7.1,20.00,3,Rosamund,Pike,F,1979-01-27,UK,35,1998,Sasha
+1,Saltburn,2023,"Drama, Thriller",UK,131,Emerald,Fennell,7.1,20.00,2,Jacob,Elordi,M,1997-06-26,Australia,10,2017,Owen
+1,Saltburn,2023,"Drama, Thriller",UK,131,Emerald,Fennell,7.1,20.00,1,Barry,Keoghan,M,1992-10-17,Ireland,25,2011,Oberon
+2,Knives Out,2019,"Mystery, Comedy",SAD,130,Rian,Johnson,7.9,40.00,6,Chris,Evans,M,1981-06-13,SAD,50,1999,Ransom Drysdale
+2,Knives Out,2019,"Mystery, Comedy",SAD,130,Rian,Johnson,7.9,40.00,5,Ana,de Armas,F,1988-04-30,Cuba,40,2006,Marta Cabrera
+2,Knives Out,2019,"Mystery, Comedy",SAD,130,Rian,Johnson,7.9,40.00,4,Daniel,Craig,M,1968-03-02,UK,60,1992,Benoit Blanc
+3,Arrival,2016,"Sci-Fi, Drama",SAD,116,Denis,Villeneuve,7.9,47.00,9,Forest,Whitaker,M,1961-07-15,SAD,60,1982,Colonel Weber
+3,Arrival,2016,"Sci-Fi, Drama",SAD,116,Denis,Villeneuve,7.9,47.00,8,Jeremy,Renner,M,1971-01-07,SAD,45,1995,Ian Donnelly
+3,Arrival,2016,"Sci-Fi, Drama",SAD,116,Denis,Villeneuve,7.9,47.00,7,Amy,Adams,F,1974-08-20,Italy/USA,75,1999,Louise Banks
+4,Interstellar,2014,"Sci-Fi, Adventure",SAD,169,Christopher,Nolan,8.6,165.00,12,Jessica,Chastain,F,1977-03-24,SAD,70,2004,Murph
+4,Interstellar,2014,"Sci-Fi, Adventure",SAD,169,Christopher,Nolan,8.6,165.00,11,Anne,Hathaway,F,1982-11-12,SAD,85,1999,Amelia Brand
+4,Interstellar,2014,"Sci-Fi, Adventure",SAD,169,Christopher,Nolan,8.6,165.00,10,Matthew,McConaughey,M,1969-11-04,SAD,100,1991,Cooper
+5,Sinners,2024,"Thriller, Drama",SAD,125,Graham,Moore,6.8,15.00,15,Oscar,Isaac,M,1979-03-09,Guatemala,55,2002,Suspect
+5,Sinners,2024,"Thriller, Drama",SAD,125,Graham,Moore,6.8,15.00,14,Rebecca,Ferguson,F,1983-10-19,Sweden,35,1999,Reporter
+5,Sinners,2024,"Thriller, Drama",SAD,125,Graham,Moore,6.8,15.00,13,Paul,Dano,M,1984-06-19,SAD,40,2000,Detective
+6,Call Me by Your Name,2017,"Romance, Drama",Italy,132,Luca,Guadagnino,8.0,3.50,18,Michael,Stuhlbarg,M,1968-07-05,SAD,30,1998,Mr. Perlman
+6,Call Me by Your Name,2017,"Romance, Drama",Italy,132,Luca,Guadagnino,8.0,3.50,17,Armie,Hammer,M,1986-08-28,SAD,20,2005,Oliver
+6,Call Me by Your Name,2017,"Romance, Drama",Italy,132,Luca,Guadagnino,8.0,3.50,16,Timothée,Chalamet,M,1995-12-27,SAD,60,2012,Elio
+7,The Devil Wears Prada,2006,"Comedy, Drama",SAD,109,David,Frankel,6.9,35.00,11,Anne,Hathaway,F,1982-11-12,SAD,85,1999,Andy Sachs
+7,The Devil Wears Prada,2006,"Comedy, Drama",SAD,109,David,Frankel,6.9,35.00,20,Emily,Blunt,F,1983-02-23,UK,60,2001,Emily Charlton
+7,The Devil Wears Prada,2006,"Comedy, Drama",SAD,109,David,Frankel,6.9,35.00,19,Meryl,Streep,F,1949-06-22,SAD,180,1975,Miranda Priestly
+8,Materialists,2025,Romantic Comedy,SAD,120,Celine,Song,0.0,25.00,23,Chris,Messina,M,1974-08-11,SAD,25,1995,David
+8,Materialists,2025,Romantic Comedy,SAD,120,Celine,Song,0.0,25.00,22,Pedro,Pascal,M,1975-04-02,Chile,45,1996,Liam
+8,Materialists,2025,Romantic Comedy,SAD,120,Celine,Song,0.0,25.00,21,Dakota,Johnson,F,1989-10-04,SAD,40,1999,Emma
+9,Babygirl,2024,"Romance, Drama",SAD,118,Halina,Reijn,7.5,12.00,26,Paul,Mescal,M,1996-02-02,Ireland,30,2017,Liam
+9,Babygirl,2024,"Romance, Drama",SAD,118,Halina,Reijn,7.5,12.00,25,Harris,Dickinson,M,1996-06-24,UK,15,2014,Jack
+9,Babygirl,2024,"Romance, Drama",SAD,118,Halina,Reijn,7.5,12.00,24,Nicole,Kidman,F,1967-06-20,Australia,100,1983,Elena
+10,The Imitation Game,2014,"Biography, Drama",UK,114,Morten,Tyldum,8.0,14.00,29,Matthew,Goode,M,1978-04-03,UK,40,2002,Hugh Alexander
+10,The Imitation Game,2014,"Biography, Drama",UK,114,Morten,Tyldum,8.0,14.00,28,Keira,Knightley,F,1985-03-26,UK,75,1995,Joan Clarke
+10,The Imitation Game,2014,"Biography, Drama",UK,114,Morten,Tyldum,8.0,14.00,27,Benedict,Cumberbatch,M,1976-07-19,UK,90,2001,Alan Turing
+11,Challengers,2024,"Drama, Sport, Romantika",SAD,131,Luca,Guadagnino,7.5,55.00,32,Josh,O'Connor,M,1990-05-20,UK,25,2011,Mike
+11,Challengers,2024,"Drama, Sport, Romantika",SAD,131,Luca,Guadagnino,7.5,55.00,31,Mike,Faist,M,1991-01-05,SAD,20,2012,Anthony
+11,Challengers,2024,"Drama, Sport, Romantika",SAD,131,Luca,Guadagnino,7.5,55.00,30,Zendaya,Coleman,F,1996-09-01,SAD,70,2010,Maddy
+12,On Swift Horses,2024,"Drama, Romantika",SAD,137,Daniel,Minahan,7.0,30.00,34,Will,Poulter,M,1993-01-28,UK,25,2007,Maggie
+12,On Swift Horses,2024,"Drama, Romantika",SAD,137,Daniel,Minahan,7.0,30.00,2,Jacob,Elordi,M,1997-06-26,Australia,10,2017,Eli
+12,On Swift Horses,2024,"Drama, Romantika",SAD,137,Daniel,Minahan,7.0,30.00,33,Daisy,Edgar-Jones,F,1998-05-24,UK,15,2016,Abby
