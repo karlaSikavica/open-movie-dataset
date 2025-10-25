@@ -6,6 +6,7 @@ services:
     container_name: filmoviContainer
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=neverMinD44
+      - POSTGRES_PASSWORD=YOUR_PASSWORD
     ports:
       - "5435:5432"
+
