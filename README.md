@@ -3,7 +3,7 @@
 
 Ovaj skup podataka sadrži informacije o filmovima i glumcima koji u njima sudjeluju.  
 Podaci uključuju osnovne informacije o filmovima (naziv, godina izlaska, žanr, trajanje, zemlja nastanka, redatelj, IMDB ocjena, budžet) te povezane podatke o glumcima (ime, prezime, spol, datum rođenja, država podrijetla, broj nagrada, godina početka karijere i uloga).  
-Cilj skupa podataka je prikazati primjer pravilno modelirane relacijske baze podataka koja povezuje filmove i glumce kroz odnos **jedan film – više glumaca**.  
+Cilj skupa podataka je prikazati primjer otvorenih podataka kao i  pravilno modelirane relacijske baze podataka koja povezuje filmove i glumce kroz odnos **jedan film – više glumaca**.  
 Podaci su pohranjeni u formatima **CSV** i **JSON**, koji su strojno čitljivi i jednostavni za daljnju obradu i analizu.
 
 ---
@@ -14,16 +14,19 @@ Podaci su pohranjeni u formatima **CSV** i **JSON**, koji su strojno čitljivi i
 |--------------------|------------|
 | **Naziv skupa podataka** | Filmovi |
 | **Autor** | Karla Sikavica |
+| **Kolegij** | Otvoreno računarstvo |
 | **Verzija** | 1.0 |
+| **Datum objave** | 2025-10-25 |
+| **Format Datuma** | ISO 8601 |
 | **Jezik podataka** | Hrvatski |
 | **Licenca** | Creative Commons Zero (CC0 1.0 Universal) |
 | **Format datoteka** | CSV, JSON |
 | **Broj zapisa (instanci)** | 12 filmova, 34 glumca |
-| **Broj atributa** | 10 atributa za film, 9 atributa za glumca |
-| **Izvor podataka** | Ručno prikupljeni podaci iz javno dostupnih izvora (IMDb) |
+| **Broj atributa** | 14 atributa za film, 13 atributa za glumce |
+| **Izvor podataka** | Javno dostupni izvori (Wikipedia, IMDB, Rotten tomatoes, TMDB) |
 | **Datum objave** | 17. listopada 2025. |
 | **Opis baze podataka** | Baza podataka sadrži dvije tablice: *Film* (roditelj) i *Glumac* (dijete), povezane relacijom 1:N. |
-| **Način izvoza** | Podaci su automatski izvezeni iz baze pomoću SQL skripte u formate CSV i JSON. |
+| **Način izvoza** | Podatci su automatski izvezeni iz baze pomoću SQL skripte u formate CSV i JSON. Pokretanjem .bat datoteka u Docker bazi automatski se generiraju CSV i JSON datoteke. |
 
 ---
 
@@ -37,8 +40,10 @@ Podaci su pohranjeni u formatima **CSV** i **JSON**, koji su strojno čitljivi i
 - **Zemlja nastanka filma** – država u kojoj je film proizveden  
 - **Trajanje filma** – duljina trajanja filma u minutama  
 - **Ime redatelja**, **Prezime redatelja** – ime i prezime redatelja filma  
-- **IMDB ocjena filma** – prosječna ocjena filma s portala IMDb  
-- **Budzet mil USD** – procijenjeni budžet filma izražen u milijunima američkih dolara  
+- **Budzet mil USD** – procijenjeni budžet filma izražen u milijunima američkih dolara
+- **IMDB ocjena** – ocjena filma s portala IMDB
+- **Rotten tomatoes ocjena** – ocjena filma s portala Rotten tomatoes  
+- **TMDB ocjena** – ocjena filma s portala TMDB
 - **Glumci** – popis povezanih glumaca s njihovim ulogama  
 
 ### **Glumci**
@@ -49,7 +54,12 @@ Podaci su pohranjeni u formatima **CSV** i **JSON**, koji su strojno čitljivi i
 - **Drzava podrijetla** – zemlja iz koje glumac potječe  
 - **Broj nagrada** – ukupan broj profesionalnih nagrada  
 - **Aktivan od** – godina početka karijere  
-- **Uloga** – ime lika kojeg glumac tumači u filmu  
+- **Uloga** – ime lika kojeg glumac tumači u filmu
+- **Broj nagrada** – ukupan broj osvojenih nagrada
+- **Oscar** – broj osvojenih Academy awards (Oscar)
+- **Golden globe** – broj osvojenih Golden globe nagrada
+- **Bafta** – broj osvojenih Bafta nagrada
+
 
 ---
 
