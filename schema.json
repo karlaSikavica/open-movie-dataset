@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/karlaSikavica/open-movie-dataset/blob/main/schema.json",
+  "title": "Filmovi",
+  "description": "Podaci o filmovima s pripadajućim glumcima i njihovim ulogama. Izvor: javno dostupni izvori (Wikipedia, IMDb, Rotten Tomatoes, TMDB). Licenca: CC0.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "title": "Film + Glumac",
+    "required": ["film_id", "naziv", "godina", "ime", "prezime", "uloga"],
+    "properties": {
+      "film_id": {
+        "type": "integer",
+        "title": "ID filma"
+      },
+      "naziv": {
+        "type": "string",
+        "title": "Naziv filma"
+      },
+      "godina": {
+        "type": "integer",
+        "title": "Godina izlaska"
+      },
+      "zemlja": {
+        "type": "string",
+        "title": "Zemlja produkcije"
+      },
+      "trajanje_min": {
+        "type": "integer",
+        "title": "Trajanje filma u minutama"
+      },
+      "zanr": {
+        "type": "string",
+        "title": "Žanr filma"
+      },
+      "redatelj_ime": {
+        "type": "string",
+        "title": "Ime redatelja"
+      },
+      "redatelj_prezime": {
+        "type": "string",
+        "title": "Prezime redatelja"
+      },
+      "prosjecna_ocjena": {
+        "type": "number",
+        "title": "Prosječna ocjena kritike"
+      },
+      "budzet_mil_usd": {
+        "type": "number",
+        "title": "Budžet filma u milijunima USD"
+      },
+      "ocjena_imdb": {
+        "type": "number",
+        "title": "Ocjena IMDb"
+      },
+      "ocjena_rotten_tomatoes": {
+        "type": "number",
+        "title": "Ocjena Rotten Tomatoes"
+      },
+      "ocjena_tmdb": {
+        "type": "number",
+        "title": "Ocjena TMDB"
+      },
+      "glumac_id": {
+        "type": "integer",
+        "title": "ID glumca"
+      },
+      "ime": {
+        "type": "string",
+        "title": "Ime glumca"
+      },
+      "prezime": {
+        "type": "string",
+        "title": "Prezime glumca"
+      },
+      "uloga": {
+        "type": "string",
+        "title": "Naziv uloge u filmu"
+      }
+    }
+  }
+}

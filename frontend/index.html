@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Open Movie Dataset</title>
+    <meta
+      name="description"
+      content="Otvoreni skup podataka o filmovima i glumcima. Dostupni JSON i CSV formati uz web prikaz i filtriranje."
+    />
+    <meta name="author" content="Karla Sikavica" />
+    <meta name="license" content="CC0 1.0 Universal" />
+    <meta name="dataset-version" content="1.0" />
+    <meta name="dataset-date" content="2025-10-25" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="container">
+      <h1>Open Movie Dataset</h1>
+      <p class="lead">
+        Skup podataka o filmovima i glumcima. Sadrži osnovne informacije o
+        filmovima (naziv, godina, žanr, trajanje, zemlja, redatelj, budžet,
+        ocjene) i povezane glumce. Podaci su dostupni u <strong>CSV</strong> i
+        <strong>JSON</strong> formatima.
+      </p>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Preuzimanje skupa podataka</h2>
+        <div class="downloads">
+          <a class="btn" href="../filmovi.csv" download
+            >Preuzmi CSV (cijeli skup)</a
+          >
+          <a class="btn" href="../filmovi.json" download
+            >Preuzmi JSON (cijeli skup)</a
+          >
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Tablični prikaz i filtriranje</h2>
+        <a class="btn" href="./datatable.html">Otvori tablični prikaz</a>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Open Movie Dataset</title>
+    <meta
+      name="description"
+      content="Tablični prikaz i filtriranje otvorenog skupa podataka o filmovima."
+    />
+    <meta name="author" content="Karla Sikavica" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="container">
+      <small>
+        <a href="./index.html" class="natrag">< natrag</a>
+      </small>
+    </header>
+
+    <main class="container">
+      <form id="filterForm" class="filters card" aria-label="Filter podataka">
+        <div class="field">
+          <label for="atribut">Atribut</label>
+          <!-- <select id="atribut" name="field">
+            <option value="all">Svi atributi</option>
+            <option value="naziv">Naziv</option>
+            <option value="godina">Godina</option>
+            <option value="zemlja">Zemlja</option>
+            <option value="trajanje_min">Trajanje (min)</option>
+            <option value="zanr">Žanr</option>
+            <option value="redatelj_ime">Redatelj (ime)</option>
+            <option value="redatelj_prezime">Redatelj (prezime)</option>
+            <option value="g.ime">Ime glumca</option>
+            <option value="g.prezime">Prezime glumca</option>
+            <option value="fg.uloga">Uloga</option>
+            <option value="prosjecna_ocjena">Prosj. ocjena</option>
+            <option value="budzet_mil_usd">Budžet (mil. USD)</option>
+            <option value="ocjena_imdb">Ocjena IMDb</option>
+            <option value="ocjena_rotten_tomatoes">
+              Ocjena Rotten Tomatoes
+            </option>
+            <option value="ocjena_tmdb">Ocjena TMDB</option>
+          </select> -->
+          <select id="atribut" name="field">
+            <option value="*">Svi atributi</option>
+            <option value="FilmID">FilmID</option>
+            <option value="Naziv filma">Naziv filma</option>
+            <option value="Godina">Godina</option>
+            <option value="Zanr">Zanr</option>
+            <option value="Zemlja nastanka filma">Zemlja nastanka filma</option>
+            <option value="Trajanje filma">Trajanje filma</option>
+            <option value="Ime redatelja">Ime redatelja</option>
+            <option value="Prezime redatelja">Prezime redatelja</option>
+            <option value="Budzet mil USD">Budzet mil USD</option>
+            <option value="Prosjecna ocjena">Prosjecna ocjena</option>
+            <option value="IMDB ocjena">IMDB ocjena</option>
+            <option value="Rotten tomatoes ocjena">
+              Rotten tomatoes ocjena
+            </option>
+            <option value="TMDB ocjena">TMDB ocjena</option>
+            <option value="Ime glumca">Ime glumca</option>
+            <option value="Prezime glumca">Prezime glumca</option>
+            <option value="Uloga">Uloga</option>
+            <option value="Spol">Spol</option>
+            <option value="Datum rodenja">Datum rodenja</option>
+            <option value="Drzava podrijetla">Drzava podrijetla</option>
+            <option value="Aktivan od">Aktivan od</option>
+            <option value="Broj nagrada">Broj nagrada</option>
+            <option value="Oscar">Oscar</option>
+            <option value="Golden globe">Golden globe</option>
+            <option value="Bafta">Bafta</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="pretraga">Pretraži</label>
+          <input
+            id="pretraga"
+            name="search"
+            type="search"
+            placeholder="npr. Nolan, Drama, 2014..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn" id="gumb">Primijeni</button>
+          <button type="button" id="resetBtn" class="btn ghost">Poništi</button>
+        </div>
+      </form>
+
+      <section class="card">
+        <div class="table-actions">
+          <div class="left">
+            <strong id="countInfo">Prikazano: 0</strong>
+          </div>
+          <div class="right">
+            <a id="dlCsv" class="btn" href="/api/filmovi.csv" download
+              >Preuzmi CSV (filtrirano)</a
+            >
+            <a id="dlJson" class="btn" href="/api/filmovi.json" download
+              >Preuzmi JSON (filtrirano)</a
+            >
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table
+            id="tablica"
+            class="table"
+            role="table"
+            aria-label="Tablica filmova"
+          >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Naziv</th>
+                <th>Godina</th>
+                <th>Zemlja</th>
+                <th>Trajanje</th>
+                <th>Žanr</th>
+                <th>Redatelj</th>
+                <th>IMDb</th>
+                <th>RT</th>
+                <th>TMDB</th>
+                <th>Prosj.</th>
+                <th>Budžet (M$)</th>
+                <th>Glumac</th>
+                <th>Uloga</th>
+                <th>Spol</th>
+                <th>Datum rođenja</th>
+                <th>Država podrijetla</th>
+                <th>Aktivan od</th>
+                <th>Broj nagrada</th>
+                <th>Oscar</th>
+                <th>Golden Globe</th>
+                <th>Bafta</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container foot"></footer>
+
+    <script>
+      const form = document.getElementById("filterForm");
+      const qInput = document.getElementById("pretraga");
+      const fieldSelect = document.getElementById("atribut");
+      const tableBody = document.querySelector("#tablica tbody");
+      const countInfo = document.getElementById("countInfo");
+      const resetBtn = document.getElementById("resetBtn");
+      const dlCsv = document.getElementById("dlCsv");
+      const dlJson = document.getElementById("dlJson");
+
+      function buildQueryParams() {
+        const q = qInput.value.trim();
+        const field = fieldSelect.value || "all";
+        const params = new URLSearchParams();
+        if (q) params.set("search", q);
+        if (field && field !== "all") params.set("field", field);
+        return params.toString();
+      }
+
+      function updateDownloadLinks() {
+        const qs = buildQueryParams();
+        dlCsv.href = "/api/filmovi.csv" + (qs ? "?" + qs : "");
+        dlJson.href = "/api/filmovi.json" + (qs ? "?" + qs : "");
+      }
+
+      async function fetchData() {
+        const qs = buildQueryParams();
+        const url = "/api/filmovi" + (qs ? "?" + qs : "");
+        const res = await fetch(url);
+        if (!res.ok) {
+          tableBody.innerHTML =
+            '<tr><td colspan="14">Greška pri dohvaćanju podataka.</td></tr>';
+          countInfo.textContent = "Prikazano: 0";
+          return;
+        }
+        const data = await res.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          tableBody.innerHTML =
+            '<tr><td colspan="14">Nema rezultata za zadani filter.</td></tr>';
+          countInfo.textContent = "Prikazano: 0";
+        } else {
+          const rows = data
+            .map((row) => {
+              const redatelj = [row.redatelj_ime, row.redatelj_prezime]
+                .filter(Boolean)
+                .join(" ");
+
+              const glumac = [row.ime, row.prezime].filter(Boolean).join(" ");
+
+              return `
+      <tr>
+        <td>${row.film_id ?? ""}</td>
+        <td>${row.naziv ?? ""}</td>
+        <td>${row.godina ?? ""}</td>
+        <td>${row.zemlja ?? ""}</td>
+        <td>${row.trajanje_min ?? ""}</td>
+        <td>${row.zanr ?? ""}</td>
+        <td>${redatelj}</td>
+        <td>${row.ocjena_imdb ?? ""}</td>
+        <td>${row.ocjena_rotten_tomatoes ?? ""}</td>
+        <td>${row.ocjena_tmdb ?? ""}</td>
+        <td>${row.prosjecna_ocjena ?? ""}</td>
+        <td>${row.budzet_mil_usd ?? ""}</td>
+        <td>${glumac}</td>
+        <td>${row.uloga ?? ""}</td>
+        <td>${row.spol ?? ""}</td>
+        <td>${
+          row.datum_rodenja
+            ? new Date(row.datum_rodenja).toLocaleDateString("hr-HR")
+            : ""
+        }</td>
+        <td>${row.drzava_podrijetla ?? ""}</td>
+        <td>${row.aktivan_od ?? ""}</td>
+        <td>${row.broj_nagrada ?? ""}</td>
+        <td>${row.nagrada_oscar ?? ""}</td>
+        <td>${row.nagrada_golden_globe ?? ""}</td>
+        <td>${row.nagrada_bafta ?? ""}</td>
+      </tr>
+    `;
+            })
+            .join("");
+
+          tableBody.innerHTML = rows;
+          countInfo.textContent = "Prikazano: " + data.length;
+        }
+
+        updateDownloadLinks();
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetchData();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        qInput.value = "";
+        fieldSelect.value = "all";
+        fetchData();
+      });
+
+      fetchData();
+
+      let t = null;
+      qInput.addEventListener("input", () => {
+        clearTimeout(t);
+        t = setTimeout(fetchData, 300);
+      });
+      fieldSelect.addEventListener("change", fetchData);
+    </script>
+  </body>
+</html>
