@@ -1,0 +1,37 @@
+FilmID,Naziv filma,Godina,Zanr,Zemlja nastanka filma,Trajanje filma,Ime redatelja,Prezime redatelja,Budzet mil USD,Prosjecna ocjena,IMDB ocjena,Rotten tomatoes ocjena,TMDB ocjena,GlumacID,Ime glumca,Prezime glumca,Uloga,Spol,Datum rodenja,Drzava podrijetla,Aktivan od,Broj nagrada,Oscar,Golden globe,Bafta
+1,Saltburn,2023,"Drama, Thriller",UK,131,Emerald,Fennell,20.00,7.1,7.1,72.0,70.0,1,Barry,Keoghan,Oberon,M,1992-10-17,Ireland,2011,25,0,0,1
+1,Saltburn,2023,"Drama, Thriller",UK,131,Emerald,Fennell,20.00,7.1,7.1,72.0,70.0,2,Jacob,Elordi,Owen,M,1997-06-26,Australia,2017,10,0,0,0
+1,Saltburn,2023,"Drama, Thriller",UK,131,Emerald,Fennell,20.00,7.1,7.1,72.0,70.0,3,Rosamund,Pike,Sasha,F,1979-01-27,UK,1998,35,0,1,0
+2,Knives Out,2019,"Mystery, Comedy",SAD,130,Rian,Johnson,40.00,8.5,7.9,97.0,78.0,4,Daniel,Craig,Benoit Blanc,M,1968-03-02,UK,1992,60,0,0,0
+2,Knives Out,2019,"Mystery, Comedy",SAD,130,Rian,Johnson,40.00,8.5,7.9,97.0,78.0,5,Ana,de Armas,Marta Cabrera,F,1988-04-30,Cuba,2006,40,0,0,0
+2,Knives Out,2019,"Mystery, Comedy",SAD,130,Rian,Johnson,40.00,8.5,7.9,97.0,78.0,6,Chris,Evans,Ransom Drysdale,M,1981-06-13,SAD,1999,50,0,0,0
+3,Arrival,2016,"Sci-Fi, Drama",SAD,116,Denis,Villeneuve,47.00,8.3,7.9,94.0,76.0,7,Amy,Adams,Louise Banks,F,1974-08-20,Italy/USA,1999,75,0,2,0
+3,Arrival,2016,"Sci-Fi, Drama",SAD,116,Denis,Villeneuve,47.00,8.3,7.9,94.0,76.0,8,Jeremy,Renner,Ian Donnelly,M,1971-01-07,SAD,1995,45,0,0,0
+3,Arrival,2016,"Sci-Fi, Drama",SAD,116,Denis,Villeneuve,47.00,8.3,7.9,94.0,76.0,9,Forest,Whitaker,Colonel Weber,M,1961-07-15,SAD,1982,60,1,1,1
+4,Interstellar,2014,"Sci-Fi, Adventure",SAD,169,Christopher,Nolan,165.00,8.1,8.7,72.0,85.0,10,Matthew,McConaughey,Cooper,M,1969-11-04,SAD,1991,100,1,1,0
+4,Interstellar,2014,"Sci-Fi, Adventure",SAD,169,Christopher,Nolan,165.00,8.1,8.7,72.0,85.0,11,Anne,Hathaway,Amelia Brand,F,1982-11-12,SAD,1999,85,1,1,1
+4,Interstellar,2014,"Sci-Fi, Adventure",SAD,169,Christopher,Nolan,165.00,8.1,8.7,72.0,85.0,12,Jessica,Chastain,Murph,F,1977-03-24,SAD,2004,70,1,1,0
+5,Sinners,2024,"Thriller, Drama",SAD,125,Graham,Moore,15.00,8.3,7.6,97.0,75.0,13,Paul,Dano,Detective,M,1984-06-19,SAD,2000,40,0,0,0
+5,Sinners,2024,"Thriller, Drama",SAD,125,Graham,Moore,15.00,8.3,7.6,97.0,75.0,14,Rebecca,Ferguson,Reporter,F,1983-10-19,Sweden,1999,35,0,0,0
+5,Sinners,2024,"Thriller, Drama",SAD,125,Graham,Moore,15.00,8.3,7.6,97.0,75.0,15,Oscar,Isaac,Suspect,M,1979-03-09,Guatemala,2002,55,0,1,0
+6,Call Me by Your Name,2017,"Romance, Drama",Italy,132,Luca,Guadagnino,3.50,8.5,8.0,95.0,81.0,16,Timothée,Chalamet,Elio,M,1995-12-27,SAD,2012,60,0,0,0
+6,Call Me by Your Name,2017,"Romance, Drama",Italy,132,Luca,Guadagnino,3.50,8.5,8.0,95.0,81.0,17,Armie,Hammer,Oliver,M,1986-08-28,SAD,2005,20,0,0,0
+6,Call Me by Your Name,2017,"Romance, Drama",Italy,132,Luca,Guadagnino,3.50,8.5,8.0,95.0,81.0,18,Michael,Stuhlbarg,Mr. Perlman,M,1968-07-05,SAD,1998,30,0,0,0
+7,The Devil Wears Prada,2006,"Comedy, Drama",SAD,109,David,Frankel,35.00,7.3,6.9,75.0,74.0,11,Anne,Hathaway,Andy Sachs,F,1982-11-12,SAD,1999,85,1,1,1
+7,The Devil Wears Prada,2006,"Comedy, Drama",SAD,109,David,Frankel,35.00,7.3,6.9,75.0,74.0,19,Meryl,Streep,Miranda Priestly,F,1949-06-22,SAD,1975,180,3,9,2
+7,The Devil Wears Prada,2006,"Comedy, Drama",SAD,109,David,Frankel,35.00,7.3,6.9,75.0,74.0,20,Emily,Blunt,Emily Charlton,F,1983-02-23,UK,2001,60,0,1,0
+8,Materialists,2025,Romantic Comedy,SAD,120,Celine,Song,25.00,7.1,6.3,86.0,65.0,21,Dakota,Johnson,Emma,F,1989-10-04,SAD,1999,40,0,0,0
+8,Materialists,2025,Romantic Comedy,SAD,120,Celine,Song,25.00,7.1,6.3,86.0,65.0,22,Pedro,Pascal,Liam,M,1975-04-02,Chile,1996,45,0,0,0
+8,Materialists,2025,Romantic Comedy,SAD,120,Celine,Song,25.00,7.1,6.3,86.0,65.0,23,Chris,Messina,David,M,1974-08-11,SAD,1995,25,0,0,0
+9,Babygirl,2024,"Romance, Drama",SAD,118,Halina,Reijn,12.00,7.0,7.5,77.0,57.0,24,Nicole,Kidman,Elena,F,1967-06-20,Australia,1983,100,1,6,1
+9,Babygirl,2024,"Romance, Drama",SAD,118,Halina,Reijn,12.00,7.0,7.5,77.0,57.0,25,Harris,Dickinson,Jack,M,1996-06-24,UK,2014,15,0,0,0
+9,Babygirl,2024,"Romance, Drama",SAD,118,Halina,Reijn,12.00,7.0,7.5,77.0,57.0,26,Paul,Mescal,Liam,M,1996-02-02,Ireland,2017,30,0,0,0
+10,The Imitation Game,2014,"Biography, Drama",UK,114,Morten,Tyldum,14.00,8.3,8.0,90.0,80.0,27,Benedict,Cumberbatch,Alan Turing,M,1976-07-19,UK,2001,90,0,0,0
+10,The Imitation Game,2014,"Biography, Drama",UK,114,Morten,Tyldum,14.00,8.3,8.0,90.0,80.0,28,Keira,Knightley,Joan Clarke,F,1985-03-26,UK,1995,75,0,0,0
+10,The Imitation Game,2014,"Biography, Drama",UK,114,Morten,Tyldum,14.00,8.3,8.0,90.0,80.0,29,Matthew,Goode,Hugh Alexander,M,1978-04-03,UK,2002,40,0,0,0
+11,Challengers,2024,"Drama, Sport, Romantika",SAD,131,Luca,Guadagnino,55.00,7.7,7.5,88.0,69.0,30,Zendaya,Coleman,Maddy,F,1996-09-01,SAD,2010,70,0,1,0
+11,Challengers,2024,"Drama, Sport, Romantika",SAD,131,Luca,Guadagnino,55.00,7.7,7.5,88.0,69.0,31,Mike,Faist,Anthony,M,1991-01-05,SAD,2012,20,0,0,0
+11,Challengers,2024,"Drama, Sport, Romantika",SAD,131,Luca,Guadagnino,55.00,7.7,7.5,88.0,69.0,32,Josh,O'Connor,Mike,M,1990-05-20,UK,2011,25,0,1,0
+12,On Swift Horses,2024,"Drama, Romantika",SAD,137,Daniel,Minahan,30.00,6.2,7.0,53.0,62.0,2,Jacob,Elordi,Eli,M,1997-06-26,Australia,2017,10,0,0,0
+12,On Swift Horses,2024,"Drama, Romantika",SAD,137,Daniel,Minahan,30.00,6.2,7.0,53.0,62.0,33,Daisy,Edgar-Jones,Abby,F,1998-05-24,UK,2016,15,0,0,0
+12,On Swift Horses,2024,"Drama, Romantika",SAD,137,Daniel,Minahan,30.00,6.2,7.0,53.0,62.0,34,Will,Poulter,Maggie,M,1993-01-28,UK,2007,25,0,0,1

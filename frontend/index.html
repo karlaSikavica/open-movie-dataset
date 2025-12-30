@@ -17,12 +17,78 @@
   <body>
     <header class="container">
       <h1>Open Movie Dataset</h1>
+
       <p class="lead">
-        Skup podataka o filmovima i glumcima. Sadrži osnovne informacije o
-        filmovima (naziv, godina, žanr, trajanje, zemlja, redatelj, budžet,
-        ocjene) i povezane glumce. Podaci su dostupni u <strong>CSV</strong> i
-        <strong>JSON</strong> formatima.
+        Otvoreni skup podataka: <strong>Filmski katalog</strong>. Sadrži
+        informacije o filmovima i glumcima te prikazuje pravilno modeliranu
+        relacijsku bazu podataka (jedan film – više glumaca). Podaci su dostupni
+        u <strong>CSV</strong> i <strong>JSON</strong> formatima.
       </p>
+
+      <div class="meta-card">
+        <div class="meta-row">
+          <span class="meta-key">Naziv skupa podataka</span
+          ><span class="meta-val">Filmovi</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Autor</span
+          ><span class="meta-val">Karla Sikavica</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Kolegij</span
+          ><span class="meta-val">Otvoreno računarstvo</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Verzija</span><span class="meta-val">1.0</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Datum objave</span
+          ><span class="meta-val">2025-10-25</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Format datuma</span
+          ><span class="meta-val">ISO 8601</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Jezik podataka</span
+          ><span class="meta-val">Hrvatski</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Licenca</span
+          ><span class="meta-val"
+            >Creative Commons Zero (CC0 1.0 Universal)</span
+          >
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Format datoteka</span
+          ><span class="meta-val">CSV, JSON</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Broj zapisa (instanci)</span
+          ><span class="meta-val">12 filmova, 34 glumca</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Broj atributa</span
+          ><span class="meta-val">14 (film), 13 (glumci)</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Izvor podataka</span
+          ><span class="meta-val">Wikipedia, IMDB, Rotten Tomatoes, TMDB</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Opis baze podataka</span
+          ><span class="meta-val"
+            >Tablice: Film (roditelj) i Glumac (dijete), relacija 1:N</span
+          >
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">Način izvoza</span
+          ><span class="meta-val"
+            >Automatski export iz baze (SQL) u CSV/JSON; generiranje kroz .bat u
+            Dockeru</span
+          >
+        </div>
+      </div>
     </header>
 
     <main class="container">

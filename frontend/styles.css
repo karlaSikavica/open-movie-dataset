@@ -176,3 +176,36 @@ h2 {
     padding: 10px;
     background-color:#ffc97e;
 }
+
+.meta-card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.meta-row{
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.08);
+}
+
+.meta-row:last-child{
+  border-bottom: none;
+}
+
+.meta-key{
+  font-weight: 600;
+  color: var(--text);
+  opacity: 0.95;
+}
+
+.meta-val{
+  color: var(--muted);
+}
+
+

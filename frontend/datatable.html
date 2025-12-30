@@ -152,19 +152,22 @@
 
       async function fetchData() {
         const qs = buildQueryParams();
-        const url = "/api/filmovi" + (qs ? "?" + qs : "");
+        const url = "/api/filmovi-view" + (qs ? "?" + qs : "");
+
         const res = await fetch(url);
         if (!res.ok) {
           tableBody.innerHTML =
-            '<tr><td colspan="14">Greška pri dohvaćanju podataka.</td></tr>';
+            '<tr><td colspan="22">Greška pri dohvaćanju podataka.</td></tr>';
           countInfo.textContent = "Prikazano: 0";
           return;
         }
-        const data = await res.json();
+
+        const payload = await res.json();
+        const data = payload.response || [];
 
         if (!Array.isArray(data) || data.length === 0) {
           tableBody.innerHTML =
-            '<tr><td colspan="14">Nema rezultata za zadani filter.</td></tr>';
+            '<tr><td colspan="22">Nema rezultata za zadani filter.</td></tr>';
           countInfo.textContent = "Prikazano: 0";
         } else {
           const rows = data
@@ -176,35 +179,34 @@
               const glumac = [row.ime, row.prezime].filter(Boolean).join(" ");
 
               return `
-      <tr>
-        <td>${row.film_id ?? ""}</td>
-        <td>${row.naziv ?? ""}</td>
-        <td>${row.godina ?? ""}</td>
-        <td>${row.zemlja ?? ""}</td>
-        <td>${row.trajanje_min ?? ""}</td>
-        <td>${row.zanr ?? ""}</td>
-        <td>${redatelj}</td>
-        <td>${row.ocjena_imdb ?? ""}</td>
-        <td>${row.ocjena_rotten_tomatoes ?? ""}</td>
-        <td>${row.ocjena_tmdb ?? ""}</td>
-        <td>${row.prosjecna_ocjena ?? ""}</td>
-        <td>${row.budzet_mil_usd ?? ""}</td>
-        <td>${glumac}</td>
-        <td>${row.uloga ?? ""}</td>
-        <td>${row.spol ?? ""}</td>
-        <td>${
-          row.datum_rodenja
-            ? new Date(row.datum_rodenja).toLocaleDateString("hr-HR")
-            : ""
-        }</td>
-        <td>${row.drzava_podrijetla ?? ""}</td>
-        <td>${row.aktivan_od ?? ""}</td>
-        <td>${row.broj_nagrada ?? ""}</td>
-        <td>${row.nagrada_oscar ?? ""}</td>
-        <td>${row.nagrada_golden_globe ?? ""}</td>
-        <td>${row.nagrada_bafta ?? ""}</td>
-      </tr>
-    `;
+                <tr>
+                  <td>${row.film_id ?? ""}</td>
+                  <td>${row.naziv ?? ""}</td>
+                  <td>${row.godina ?? ""}</td>
+                  <td>${row.zemlja ?? ""}</td>
+                  <td>${row.trajanje_min ?? ""}</td>
+                  <td>${row.zanr ?? ""}</td>
+                  <td>${redatelj}</td>
+                  <td>${row.ocjena_imdb ?? ""}</td>
+                  <td>${row.ocjena_rotten_tomatoes ?? ""}</td>
+                  <td>${row.ocjena_tmdb ?? ""}</td>
+                  <td>${row.prosjecna_ocjena ?? ""}</td>
+                  <td>${row.budzet_mil_usd ?? ""}</td>
+                  <td>${glumac}</td>
+                  <td>${row.uloga ?? ""}</td>
+                  <td>${row.spol ?? ""}</td>
+                  <td>${
+                    row.datum_rodenja
+                      ? new Date(row.datum_rodenja).toLocaleDateString("hr-HR")
+                      : ""
+                  }</td>
+                  <td>${row.drzava_podrijetla ?? ""}</td>
+                  <td>${row.aktivan_od ?? ""}</td>
+                  <td>${row.broj_nagrada ?? ""}</td>
+                  <td>${row.nagrada_oscar ?? ""}</td>
+                  <td>${row.nagrada_golden_globe ?? ""}</td>
+                  <td>${row.nagrada_bafta ?? ""}</td>
+                </tr>`;
             })
             .join("");
 
