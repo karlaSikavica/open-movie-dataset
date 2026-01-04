@@ -1,0 +1,808 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Open Movie Dataset REST API",
+    "version": "1.0.0",
+    "description": "REST API za otvoreni skup podataka o filmovima i glumcima. Većina /api ruta vraća standardni omotač: { status, message, response }. Iznimke su download rute /api/filmovi.json (raw JSON) i /api/filmovi.csv (text/csv)."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4455"
+    }
+  ],
+  "tags": [
+    {
+      "name": "collection",
+      "description": "Operacije nad kolekcijom glavnog resursa."
+    },
+    {
+      "name": "single",
+      "description": "Operacije nad pojedinačnim glavnim resursom."
+    }
+  ],
+  "paths": {
+    "/db-check": {
+      "get": {
+        "summary": "Provjera veze na bazu",
+        "description": "Vraća trenutni timestamp iz baze.",
+        "responses": {
+          "200": {
+            "description": "DB veza radi",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseDbCheck" }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/filmovi": {
+      "get": {
+        "tags": ["collection"],
+        "summary": "Dohvat kolekcije filmova",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "Pretraga po nazivu (case-insensitive).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "zanr",
+            "in": "query",
+            "required": false,
+            "description": "Točno podudaranje žanra (string).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "godina",
+            "in": "query",
+            "required": false,
+            "description": "Filtriranje po godini (cijeli broj).",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Kolekcija filmova",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseFilmArray"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["collection"],
+        "summary": "Kreiranje novog filma",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FilmCreateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Film kreiran",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseFilm" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/filmovi/{id}": {
+      "get": {
+        "tags": ["single"],
+        "summary": "Dohvat filma po ID-u",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID filma",
+            "schema": { "type": "integer", "minimum": 1 },
+            "examples": {
+              "prviFilm": { "description": "Prvi film u skupu", "value": 1 },
+              "drugiFilm": { "description": "Drugi film u skupu", "value": 2 },
+              "treciFilm": { "description": "Treći film u skupu", "value": 3 }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Film",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseFilm" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "put": {
+        "tags": ["single"],
+        "summary": "Ažuriranje filma (partial update)",
+        "parameters": [{ "$ref": "#/components/parameters/MovieIdParam" }],
+        "requestBody": {
+          "required": true,
+          "description": "Tijelo može sadržavati bilo koje od dopuštenih polja; mora sadržavati barem jedno.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FilmUpdateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Film ažuriran",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseFilm" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "delete": {
+        "tags": ["single"],
+        "summary": "Brisanje filma",
+        "parameters": [{ "$ref": "#/components/parameters/MovieIdParam" }],
+        "responses": {
+          "200": {
+            "description": "Film obrisan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseDeleteMovie"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/filmovi/{id}/glumci": {
+      "get": {
+        "summary": "Dohvat glumaca za film",
+        "parameters": [{ "$ref": "#/components/parameters/MovieIdParam" }],
+        "responses": {
+          "200": {
+            "description": "Lista glumaca za zadani film",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseActorForMovieArray"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "summary": "Dodavanje/povezivanje glumca s filmom",
+        "description": "Ako glumac (ime+prezime) ne postoji, kreira se; zatim se povezuje s filmom uz ulogu.",
+        "parameters": [{ "$ref": "#/components/parameters/MovieIdParam" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ActorLinkRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Glumac povezan s filmom",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseFilmGlumacLink"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "409": { "$ref": "#/components/responses/Conflict" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/glumci": {
+      "get": {
+        "tags": ["collection"],
+        "summary": "Dohvat kolekcije glumaca",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "Pretraga po imenu, prezimenu ili državi podrijetla (case-insensitive).",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Kolekcija glumaca",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseGlumacArray"
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/statistika/zanrovi": {
+      "get": {
+        "summary": "Statistika po žanrovima",
+        "responses": {
+          "200": {
+            "description": "Lista žanrova s brojem filmova",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseGenreStatArray"
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/filmovi-view": {
+      "get": {
+        "summary": "Tablični prikaz (join film + glumci) s filtriranjem",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "required": false,
+            "description": "Naziv polja za filtriranje ili 'all'. Vrijednosti ovise o frontendu.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pogled za tablicu",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseFilmoviViewRowArray"
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/filmovi.csv": {
+      "get": {
+        "summary": "CSV download (film+glumci view)",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV datoteka",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "description": "CSV sadržaj kao tekst."
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/api/filmovi.json": {
+      "get": {
+        "summary": "JSON download (film+glumci view) - raw JSON array",
+        "description": "Ova ruta ne vraća ApiResponse omotač, nego izravno result.rows.",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON array redaka view-a",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FilmoviViewRow" }
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+
+    "/openapi.json": {
+      "get": {
+        "summary": "Dohvat OpenAPI specifikacije",
+        "responses": {
+          "200": {
+            "description": "OpenAPI JSON",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "parameters": {
+      "MovieIdParam": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID filma",
+        "schema": { "type": "integer", "minimum": 1 },
+        "examples": {
+          "prviFilm": { "description": "Prvi film u skupu", "value": 1 },
+          "drugiFilm": { "description": "Drugi film u skupu", "value": 2 },
+          "treciFilm": { "description": "Treći film u skupu", "value": 3 }
+        }
+      }
+    },
+
+    "responses": {
+      "BadRequest": {
+        "description": "Neispravan zahtjev",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiError" }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resurs nije pronađen",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiError" }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Sukob (npr. već povezano)",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiError" }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Interna greška poslužitelja",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiError" }
+          }
+        }
+      }
+    },
+
+    "schemas": {
+      "ApiResponseBase": {
+        "type": "object",
+        "required": ["status", "message", "response"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "npr. OK, Bad Request, Not Found..."
+          },
+          "message": { "type": "string" },
+          "response": { "nullable": true }
+        }
+      },
+
+      "ApiError": {
+        "allOf": [{ "$ref": "#/components/schemas/ApiResponseBase" }],
+        "description": "Standardni error format (response = null)."
+      },
+
+      "DbCheck": {
+        "type": "object",
+        "required": ["time"],
+        "properties": {
+          "time": {
+            "type": "string",
+            "description": "Vrijeme iz baze (SELECT NOW())"
+          }
+        }
+      },
+
+      "FilmDTO": {
+        "type": "object",
+        "required": ["film_id", "naziv", "godina"],
+        "properties": {
+          "film_id": { "type": "integer", "minimum": 1 },
+          "naziv": { "type": "string", "maxLength": 100 },
+          "godina": { "type": "integer" },
+          "zanr": { "type": "string", "nullable": true, "maxLength": 100 },
+          "zemlja": { "type": "string", "nullable": true, "maxLength": 50 },
+          "trajanje_min": { "type": "integer", "nullable": true },
+          "redatelj_ime": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 50
+          },
+          "redatelj_prezime": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 50
+          },
+          "budzet_mil_usd": { "type": "number", "nullable": true },
+          "prosjecna_ocjena": { "type": "number", "nullable": true },
+          "ocjena_imdb": { "type": "number", "nullable": true },
+          "ocjena_rotten_tomatoes": { "type": "number", "nullable": true },
+          "ocjena_tmdb": { "type": "number", "nullable": true }
+        }
+      },
+
+      "GlumacDTO": {
+        "type": "object",
+        "required": ["glumac_id", "ime", "prezime"],
+        "properties": {
+          "glumac_id": { "type": "integer", "minimum": 1 },
+          "ime": { "type": "string", "maxLength": 50, "nullable": true },
+          "prezime": { "type": "string", "maxLength": 50, "nullable": true },
+          "spol": {
+            "type": "string",
+            "nullable": true,
+            "description": "Jedno slovo (M/F/...)"
+          },
+          "datum_rodenja": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "drzava_podrijetla": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 50
+          },
+          "broj_nagrada": { "type": "integer", "nullable": true },
+          "aktivan_od": { "type": "integer", "nullable": true },
+          "nagrada_oscar": { "type": "integer", "nullable": true },
+          "nagrada_golden_globe": { "type": "integer", "nullable": true },
+          "nagrada_bafta": { "type": "integer", "nullable": true }
+        }
+      },
+
+      "ActorForMovieDTO": {
+        "type": "object",
+        "required": ["glumac_id", "ime", "prezime"],
+        "properties": {
+          "glumac_id": { "type": "integer", "minimum": 1 },
+          "ime": { "type": "string", "nullable": true },
+          "prezime": { "type": "string", "nullable": true },
+          "uloga": { "type": "string", "nullable": true },
+          "spol": { "type": "string", "nullable": true },
+          "datum_rodenja": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "drzava_podrijetla": { "type": "string", "nullable": true },
+          "aktivan_od": { "type": "integer", "nullable": true },
+          "broj_nagrada": { "type": "integer", "nullable": true },
+          "nagrada_oscar": { "type": "integer", "nullable": true },
+          "nagrada_golden_globe": { "type": "integer", "nullable": true },
+          "nagrada_bafta": { "type": "integer", "nullable": true }
+        }
+      },
+
+      "FilmGlumacLinkDTO": {
+        "type": "object",
+        "required": ["film_id", "glumac_id"],
+        "properties": {
+          "film_id": { "type": "integer", "minimum": 1 },
+          "glumac_id": { "type": "integer", "minimum": 1 },
+          "uloga": { "type": "string", "nullable": true }
+        }
+      },
+
+      "GenreStatDTO": {
+        "type": "object",
+        "required": ["zanr", "broj_filmova"],
+        "properties": {
+          "zanr": { "type": "string" },
+          "broj_filmova": { "type": "integer" }
+        }
+      },
+
+      "FilmoviViewRow": {
+        "type": "object",
+        "description": "Jedan redak view-a (film LEFT JOIN glumac). Polja glumca mogu biti null ako film nema povezanih glumaca.",
+        "properties": {
+          "film_id": { "type": "integer" },
+          "naziv": { "type": "string" },
+          "godina": { "type": "integer" },
+          "zanr": { "type": "string", "nullable": true },
+          "zemlja": { "type": "string", "nullable": true },
+          "trajanje_min": { "type": "integer", "nullable": true },
+          "redatelj_ime": { "type": "string", "nullable": true },
+          "redatelj_prezime": { "type": "string", "nullable": true },
+          "budzet_mil_usd": { "type": "number", "nullable": true },
+          "prosjecna_ocjena": { "type": "number", "nullable": true },
+          "ocjena_imdb": { "type": "number", "nullable": true },
+          "ocjena_rotten_tomatoes": { "type": "number", "nullable": true },
+          "ocjena_tmdb": { "type": "number", "nullable": true },
+
+          "glumac_id": { "type": "integer", "nullable": true },
+          "ime": { "type": "string", "nullable": true },
+          "prezime": { "type": "string", "nullable": true },
+          "uloga": { "type": "string", "nullable": true },
+          "spol": { "type": "string", "nullable": true },
+          "datum_rodenja": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "drzava_podrijetla": { "type": "string", "nullable": true },
+          "aktivan_od": { "type": "integer", "nullable": true },
+          "broj_nagrada": { "type": "integer", "nullable": true },
+          "nagrada_oscar": { "type": "integer", "nullable": true },
+          "nagrada_golden_globe": { "type": "integer", "nullable": true },
+          "nagrada_bafta": { "type": "integer", "nullable": true }
+        }
+      },
+
+      "FilmCreateRequest": {
+        "type": "object",
+        "required": ["naziv", "godina"],
+        "properties": {
+          "naziv": { "type": "string" },
+          "godina": { "type": "integer" },
+          "zanr": { "type": "string", "nullable": true },
+          "zemlja": { "type": "string", "nullable": true },
+          "trajanje_min": { "type": "integer", "nullable": true },
+          "redatelj_ime": { "type": "string", "nullable": true },
+          "redatelj_prezime": { "type": "string", "nullable": true },
+          "budzet_mil_usd": { "type": "number", "nullable": true },
+          "prosjecna_ocjena": { "type": "number", "nullable": true },
+          "ocjena_imdb": { "type": "number", "nullable": true },
+          "ocjena_rotten_tomatoes": { "type": "number", "nullable": true },
+          "ocjena_tmdb": { "type": "number", "nullable": true }
+        }
+      },
+
+      "FilmUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "naziv": { "type": "string", "nullable": true },
+          "godina": { "type": "integer", "nullable": true },
+          "zanr": { "type": "string", "nullable": true },
+          "zemlja": { "type": "string", "nullable": true },
+          "trajanje_min": { "type": "integer", "nullable": true },
+          "redatelj_ime": { "type": "string", "nullable": true },
+          "redatelj_prezime": { "type": "string", "nullable": true },
+          "budzet_mil_usd": { "type": "number", "nullable": true },
+          "prosjecna_ocjena": { "type": "number", "nullable": true },
+          "ocjena_imdb": { "type": "number", "nullable": true },
+          "ocjena_rotten_tomatoes": { "type": "number", "nullable": true },
+          "ocjena_tmdb": { "type": "number", "nullable": true }
+        },
+        "additionalProperties": true
+      },
+
+      "ActorLinkRequest": {
+        "type": "object",
+        "required": ["ime", "prezime"],
+        "properties": {
+          "ime": { "type": "string" },
+          "prezime": { "type": "string" },
+          "uloga": { "type": "string", "nullable": true }
+        }
+      },
+
+      "DeleteMovieResponse": {
+        "type": "object",
+        "required": ["film_id"],
+        "properties": {
+          "film_id": { "type": "integer", "minimum": 1 }
+        }
+      },
+
+      "ApiResponseDbCheck": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": { "$ref": "#/components/schemas/DbCheck" }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseFilm": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": { "$ref": "#/components/schemas/FilmDTO" }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseFilmArray": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/FilmDTO" }
+              }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseGlumacArray": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/GlumacDTO" }
+              }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseActorForMovieArray": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/ActorForMovieDTO" }
+              }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseGenreStatArray": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/GenreStatDTO" }
+              }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseFilmGlumacLink": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": { "$ref": "#/components/schemas/FilmGlumacLinkDTO" }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseFilmoviViewRowArray": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/FilmoviViewRow" }
+              }
+            }
+          }
+        ]
+      },
+
+      "ApiResponseDeleteMovie": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ApiResponseBase" },
+          {
+            "type": "object",
+            "properties": {
+              "response": { "$ref": "#/components/schemas/DeleteMovieResponse" }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

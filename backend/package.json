@@ -12,9 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/karlaSikavica/open-movie-dataset.git"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
-  "type": "module",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/karlaSikavica/open-movie-dataset/issues"

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import { pool } from "./db";
+import { pool } from "./db.js";
 
 dotenv.config();
 
@@ -607,7 +607,7 @@ app.get(
     const columns = Object.keys(result.rows[0]);
     const header = columns.join(",") + "\n";
     const rows = result.rows
-      .map((row) => columns.map((col) => row[col] ?? "").join(","))
+      .map((row: any) => columns.map((col) => row[col] ?? "").join(","))
       .join("\n");
     return res.send(header + rows);
   })
