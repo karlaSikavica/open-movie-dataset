@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Korisnički profil</title>
+    <meta name="description" content="Prikaz profila prijavljenog korisnika." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="container">
+      <nav class="navbar" aria-label="Navigacija">
+        <div class="nav-left">
+          <a href="./index.html" class="natrag">< natrag</a>
+          <span id="authBadge" class="badge">Provjera prijave...</span>
+        </div>
+
+        <div class="nav-right">
+          <a id="loginBtn" class="btn" href="/login">Prijava</a>
+          <a id="refreshBtn" class="btn ghost" href="#" style="display: none"
+            >Osvježi preslike</a
+          >
+          <span id="toast" class="toast" style="display: none"></span>
+
+          <a id="logoutBtn" class="btn" href="/logout" style="display: none"
+            >Odjava</a
+          >
+        </div>
+      </nav>
+
+      <h1>Korisnički profil</h1>
+      <p class="lead">Podaci o prijavljenom korisniku</p>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Osnovni podaci</h2>
+        <div class="profile-header">
+          <img
+            id="profileImage"
+            alt="Profilna slika korisnika"
+            class="profile-img"
+            style="display: none"
+          />
+        </div>
+
+        <div id="profileBox" class="meta-card">
+          <div class="meta-row">
+            <span class="meta-key">Status</span>
+            <span class="meta-val" id="statusText">Učitavanje...</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>JSON</h2>
+        <pre id="rawJson" style="margin: 0; white-space: pre-wrap"></pre>
+      </section>
+    </main>
+
+    <script>
+      const authBadge = document.getElementById("authBadge");
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const refreshBtn = document.getElementById("refreshBtn");
+      const statusText = document.getElementById("statusText");
+      const profileBox = document.getElementById("profileBox");
+      const rawJson = document.getElementById("rawJson");
+
+      const profileImage = document.getElementById("profileImage");
+
+      function addRow(key, val) {
+        const row = document.createElement("div");
+        row.className = "meta-row";
+        row.innerHTML = `<span class="meta-key">${key}</span><span class="meta-val">${
+          val ?? ""
+        }</span>`;
+        profileBox.appendChild(row);
+      }
+
+      async function loadAuth() {
+        try {
+          const res = await fetch("/auth-status", {
+            credentials: "same-origin",
+          });
+          const data = await res.json();
+
+          if (data && data.authenticated) {
+            authBadge.textContent = "Prijavljeni ste";
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "inline-block";
+            refreshBtn.style.display = "inline-block";
+            statusText.textContent = "Prijava potvrđena. Dohvaćam profil...";
+
+            await loadProfile();
+          } else {
+            authBadge.textContent = "Niste prijavljeni";
+            loginBtn.style.display = "inline-block";
+            logoutBtn.style.display = "none";
+            refreshBtn.style.display = "none";
+            statusText.textContent =
+              "Za pregled profila potrebno je prijaviti se.";
+            rawJson.textContent = "";
+          }
+        } catch (e) {
+          authBadge.textContent = "Nije moguće provjeriti prijavu";
+          statusText.textContent = "Greška pri provjeri prijave.";
+        }
+      }
+
+      async function loadProfile() {
+        try {
+          const res = await fetch("/api/profil", {
+            credentials: "same-origin",
+          });
+
+          if (res.status === 401) {
+            statusText.textContent = "Niste prijavljeni (401).";
+            return;
+          }
+
+          const payload = await res.json();
+          const user = payload.response;
+
+          if (user?.picture) {
+            profileImage.src = user.picture;
+            profileImage.style.display = "block";
+          } else {
+            profileImage.style.display = "none";
+          }
+
+          const rows = profileBox.querySelectorAll(".meta-row");
+          rows.forEach((r, i) => {
+            if (i !== 0) r.remove();
+          });
+
+          addRow("Email", user?.email || "");
+          addRow("Nadimak", user?.nickname || "");
+          addRow("ID (sub)", user?.sub || "");
+          addRow("Provider", user?.sub ? user.sub.split("|")[0] : "");
+
+          statusText.textContent = "Profil uspješno učitan.";
+          rawJson.textContent = JSON.stringify(user, null, 2);
+        } catch (e) {
+          statusText.textContent = "Greška pri dohvaćanju profila.";
+        }
+      }
+
+      loadAuth();
+      const toast = document.getElementById("toast");
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.style.display = "inline-block";
+        clearTimeout(window.__t);
+        window.__t = setTimeout(() => (toast.style.display = "none"), 2000);
+      }
+
+      refreshBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        try {
+          const res = await fetch("/api/osvjezi-preslike", {
+            credentials: "same-origin",
+          });
+
+          if (res.status === 401) {
+            showToast("Potrebna je prijava.");
+            return;
+          }
+          if (!res.ok) {
+            showToast("Greška pri osvježavanju.");
+            return;
+          }
+
+          showToast("Osvježeno");
+        } catch (err) {
+          showToast("Greška pri osvježavanju.");
+        }
+      });
+    </script>
+  </body>
+</html>

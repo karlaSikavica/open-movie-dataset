@@ -17,6 +17,30 @@
   <body>
     <header class="container">
       <h1>Open Movie Dataset</h1>
+      <nav class="navbar card" aria-label="Navigacija">
+        <div class="nav-left">
+          <span id="authBadge" class="badge">Provjera prijave...</span>
+        </div>
+
+        <div class="nav-right">
+          <a id="loginBtn" class="btn" href="/login">Prijava</a>
+          <a
+            id="profileBtn"
+            class="btn ghost"
+            href="./profile.html"
+            style="display: none"
+            >Korisnički profil</a
+          >
+          <a id="refreshBtn" class="btn ghost" href="#" style="display: none"
+            >Osvježi preslike</a
+          >
+          <span id="toast" class="toast" style="display: none"></span>
+
+          <a id="logoutBtn" class="btn" href="/odjava" style="display: none"
+            >Odjava</a
+          >
+        </div>
+      </nav>
 
       <p class="lead">
         Otvoreni skup podataka: <strong>Filmski katalog</strong>. Sadrži
@@ -95,10 +119,10 @@
       <section class="card">
         <h2>Preuzimanje skupa podataka</h2>
         <div class="downloads">
-          <a class="btn" href="../filmovi.csv" download
+          <a class="btn" href="/api/filmovi.csv" download
             >Preuzmi CSV (cijeli skup)</a
           >
-          <a class="btn" href="../filmovi.json" download
+          <a class="btn" href="/api/filmovi.json" download
             >Preuzmi JSON (cijeli skup)</a
           >
         </div>
@@ -109,5 +133,75 @@
         <a class="btn" href="./datatable.html">Otvori tablični prikaz</a>
       </section>
     </main>
+    <script>
+      const authBadge = document.getElementById("authBadge");
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const profileBtn = document.getElementById("profileBtn");
+      const refreshBtn = document.getElementById("refreshBtn");
+
+      async function loadAuth() {
+        try {
+          const res = await fetch("/auth-status", {
+            credentials: "same-origin",
+          });
+          const data = await res.json();
+
+          if (data && data.authenticated) {
+            authBadge.textContent = "Prijavljeni ste";
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "inline-block";
+            profileBtn.style.display = "inline-block";
+            refreshBtn.style.display = "inline-block";
+          } else {
+            authBadge.textContent = "Niste prijavljeni";
+            loginBtn.style.display = "inline-block";
+            logoutBtn.style.display = "none";
+            profileBtn.style.display = "none";
+            refreshBtn.style.display = "none";
+          }
+        } catch (e) {
+          authBadge.textContent = "Nije moguće provjeriti prijavu";
+          loginBtn.style.display = "inline-block";
+          logoutBtn.style.display = "none";
+          profileBtn.style.display = "none";
+          refreshBtn.style.display = "none";
+        }
+      }
+
+      loadAuth();
+
+      const toast = document.getElementById("toast");
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.style.display = "inline-block";
+        clearTimeout(window.__t);
+        window.__t = setTimeout(() => (toast.style.display = "none"), 2000);
+      }
+
+      refreshBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        try {
+          const res = await fetch("/api/osvjezi-preslike", {
+            credentials: "same-origin",
+          });
+
+          if (res.status === 401) {
+            showToast("Potrebna je prijava.");
+            return;
+          }
+          if (!res.ok) {
+            showToast("Greška pri osvježavanju.");
+            return;
+          }
+
+          showToast("Osvježeno");
+        } catch (err) {
+          showToast("Greška pri osvježavanju.");
+        }
+      });
+    </script>
   </body>
 </html>

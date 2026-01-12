@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { pool } from "./db.js";
+import { auth } from "express-openid-connect";
 
 dotenv.config();
 
@@ -14,6 +15,43 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../frontend")));
+
+const config = {
+  authRequired: false,
+  //auth0Logout: true,
+  idpLogout: false,
+  auth0Logout: false,
+  secret: process.env.SECRET,
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.CLIENT_ID,
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
+};
+
+app.use(auth(config));
+
+app.get("/auth-status", (req, res) => {
+  res.json({
+    authenticated: req.oidc.isAuthenticated(),
+    user: req.oidc.user ?? null,
+  });
+});
+
+function requireAuth(req: Request, res: Response, next: NextFunction) {
+  if (!req.oidc.isAuthenticated()) {
+    return sendError(res, 401, "Unauthorized", "Potrebna je prijava.");
+  }
+  next();
+}
+
+app.get("/api/profil", requireAuth, (req, res) => {
+  return sendOK(res, "Fetched user profile", req.oidc.user);
+});
+
+app.get("/odjava", (req, res) => {
+  res.oidc.logout({
+    returnTo: process.env.BASE_URL || "http://localhost:4455",
+  });
+});
 
 type ApiResponse<T> = {
   status: string;
@@ -100,7 +138,7 @@ app.get(
 );
 
 // GET pojedinačni film po ID-u
-app.get(
+/* app.get(
   "/api/filmovi/:id",
   asyncHandler(async (req, res) => {
     const id = parseId(req.params.id);
@@ -125,6 +163,68 @@ app.get(
     }
 
     return sendOK(res, "Fetched movie resource", result.rows[0]);
+  })
+); */
+app.get(
+  "/api/filmovi/:id",
+  asyncHandler(async (req, res) => {
+    const id = parseId(req.params.id);
+    if (!id) return sendError(res, 400, "Bad Request", "Neispravan ID filma.");
+
+    const result = await pool.query(
+      `SELECT
+        film_id, naziv, godina, zanr, zemlja, trajanje_min,
+        redatelj_ime, redatelj_prezime, budzet_mil_usd,
+        prosjecna_ocjena, ocjena_imdb, ocjena_rotten_tomatoes, ocjena_tmdb
+      FROM film WHERE film_id = $1`,
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return sendError(
+        res,
+        404,
+        "Not Found",
+        "Film s traženim ID-jem ne postoji."
+      );
+    }
+
+    const f = result.rows[0];
+
+    const jsonld = {
+      "@context": {
+        "@vocab": "https://schema.org/",
+        naziv: "name",
+        godina: "datePublished",
+        zanr: "genre",
+        trajanje_min: "duration",
+        redatelj_ime: "director.givenName",
+        redatelj_prezime: "director.familyName",
+      },
+      "@type": "Movie",
+
+      film_id: f.film_id,
+      naziv: f.naziv,
+      godina: f.godina,
+      zanr: f.zanr,
+      zemlja: f.zemlja,
+      trajanje_min: f.trajanje_min ? `PT${f.trajanje_min}M` : null, // ISO 8601 duration (npr PT169M)
+
+      director: {
+        "@type": "Person",
+        givenName: f.redatelj_ime,
+        familyName: f.redatelj_prezime,
+      },
+
+      budzet_mil_usd: f.budzet_mil_usd,
+      prosjecna_ocjena: f.prosjecna_ocjena,
+      ocjena_imdb: f.ocjena_imdb,
+      ocjena_rotten_tomatoes: f.ocjena_rotten_tomatoes,
+      ocjena_tmdb: f.ocjena_tmdb,
+    };
+
+    res.setHeader("Content-Type", "application/ld+json; charset=utf-8");
+    return res.status(200).json(jsonld);
   })
 );
 
@@ -476,6 +576,57 @@ app.delete(
   })
 );
 
+const SNAP_DIR = path.join(__dirname, "../snapshots");
+const SNAP_JSON = path.join(SNAP_DIR, "filmovi.json");
+const SNAP_CSV = path.join(SNAP_DIR, "filmovi.csv");
+
+function ensureSnapDir() {
+  if (!fs.existsSync(SNAP_DIR)) fs.mkdirSync(SNAP_DIR, { recursive: true });
+}
+
+function escapeCsvValue(v: any) {
+  if (v === null || v === undefined) return "";
+  const s = String(v);
+  if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+}
+
+function rowsToCsv(rows: any[]) {
+  if (!rows || rows.length === 0) return "";
+  const columns = Object.keys(rows[0]);
+  const header = columns.join(",") + "\n";
+  const body = rows
+    .map((row) => columns.map((c) => escapeCsvValue(row[c])).join(","))
+    .join("\n");
+  return header + body;
+}
+
+//osvjezi preslike
+app.get(
+  "/api/osvjezi-preslike",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    ensureSnapDir();
+
+    const { sql, params } = filterSQL(undefined, undefined);
+    const result = await pool.query(sql, params);
+    const rows = result.rows ?? [];
+
+    fs.writeFileSync(SNAP_JSON, JSON.stringify(rows, null, 2), "utf-8");
+
+    const csv = rowsToCsv(rows);
+    fs.writeFileSync(SNAP_CSV, csv, "utf-8");
+
+    return sendOK(res, "Snapshots refreshed", {
+      records: rows.length,
+      csv: "filmovi.csv",
+      json: "filmovi.json",
+      savedTo: "snapshots/",
+      refreshedAt: new Date().toISOString(),
+    });
+  })
+);
+
 function filterSQL(search?: string, field?: string) {
   const fieldMap: Record<string, string> = {
     FilmID: "f.film_id::text",
@@ -592,7 +743,7 @@ app.get(
 );
 
 // CSV download
-app.get(
+/* app.get(
   "/api/filmovi.csv",
   asyncHandler(async (req, res) => {
     const { search, field } = req.query;
@@ -625,8 +776,75 @@ app.get(
     res.setHeader("Content-Disposition", 'attachment; filename="filmovi.json"');
     return res.json(result.rows);
   })
+); */
+
+app.get(
+  "/api/filmovi.csv",
+  asyncHandler(async (req, res) => {
+    const { search, field } = req.query;
+
+    // ako nema filtera, pokušaj poslužiti snapshot s diska
+    const hasFilter =
+      (typeof search === "string" && search.trim() !== "") ||
+      (typeof field === "string" &&
+        field.trim() !== "" &&
+        field !== "all" &&
+        field !== "*");
+
+    if (!hasFilter && fs.existsSync(SNAP_CSV)) {
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="filmovi.csv"'
+      );
+      return res.send(fs.readFileSync(SNAP_CSV, "utf-8"));
+    }
+
+    // fallback: generiraj iz baze (tvoje staro ponašanje)
+    const { sql, params } = filterSQL(search as string, field as string);
+    const result = await pool.query(sql, params);
+
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader("Content-Disposition", 'attachment; filename="filmovi.csv"');
+
+    if (result.rows.length === 0) return res.send("");
+
+    const csv = rowsToCsv(result.rows);
+    return res.send(csv);
+  })
 );
 
+app.get(
+  "/api/filmovi.json",
+  asyncHandler(async (req, res) => {
+    const { search, field } = req.query;
+
+    const hasFilter =
+      (typeof search === "string" && search.trim() !== "") ||
+      (typeof field === "string" &&
+        field.trim() !== "" &&
+        field !== "all" &&
+        field !== "*");
+
+    if (!hasFilter && fs.existsSync(SNAP_JSON)) {
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="filmovi.json"'
+      );
+      return res.send(fs.readFileSync(SNAP_JSON, "utf-8"));
+    }
+
+    const { sql, params } = filterSQL(search as string, field as string);
+    const result = await pool.query(sql, params);
+
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Disposition", 'attachment; filename="filmovi.json"');
+    return res.json(result.rows);
+  })
+);
+
+//openapi.json
 app.get(
   "/openapi.json",
   asyncHandler(async (req, res) => {
